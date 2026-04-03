@@ -1,0 +1,119 @@
+/* Beam CSS Theme (Brand-compliant) */
+:root {
+  /* Official palette */
+  --pink: #FF2069;           /* Primary CTAs / user actions */
+  --pink-light: #FF5C8C;     /* ~20% lighter */
+  --pink-dark: #CC1A54;      /* ~20% darker */
+
+  --charcoal: #06303A;       /* Core UI / text */
+  --charcoal-light: #0B4A5A; /* ~20% lighter */
+
+  --teal: #54D9C9;           /* Partners */
+  --purple: #5030E2;         /* Merchants / business */
+  --yellow: #F6C838;         /* Accents / warnings */
+  --grey: #191919;           /* Neutral elements */
+  --grey-light: #2E2E2E;     /* ~20% lighter */
+
+  /* System tokens */
+  --bg: #FFFFFF;
+  --text: var(--charcoal);
+  --muted: #4A5E66;          /* Charcoal shifted lighter for body text */
+  --border: rgba(25,25,25,0.12); /* Subtle border using neutral */
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(25,25,25,0.06), 0 1px 1px rgba(25,25,25,0.04);
+
+  /* Dynamic Primary Color (Defaults to User/Pink) */
+  --primary: var(--pink);
+  --primary-dark: var(--pink-dark);
+}
+
+html, body, #root { height: 100%; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "Nunito", Helvetica, Arial, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Layout */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+.section { padding: 24px 0; }
+.header { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); }
+.header-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; }
+.nav { display: none; gap: 24px; }
+@media (min-width: 768px) { .nav { display: flex; } }
+.mobile-nav-toggle { display: inline-flex; flex-direction: column; gap: 3px; width: 28px; height: 22px; background: transparent; border: 0; cursor: pointer; }
+.mobile-nav-toggle span { display:block; height:3px; background: var(--charcoal); border-radius:3px; }
+@media (min-width: 768px) { .mobile-nav-toggle { display: none; } }
+.mobile-nav { position: fixed; top: 0; right: -100%; width: 80%; max-width: 320px; height: 100vh; background: #fff; box-shadow: -2px 0 12px rgba(0,0,0,.12); transition: right .25s ease; z-index: 50; padding: 16px; }
+.mobile-nav.open { right: 0; }
+.mobile-nav a { display:block; padding:12px 8px; color: var(--charcoal); text-decoration: none; border-bottom: 1px solid var(--border); }
+.nav-link { font-size: 14px; color: var(--charcoal); text-decoration: none; }
+.nav-link:hover { color: var(--charcoal-light); }
+.nav-link.active { color: var(--primary); font-weight: 700; }
+
+footer { border-top: 1px solid var(--border); background: #fff; }
+.footer-inner { padding: 24px 16px; font-size: 14px; color: var(--muted); }
+
+/* UI */
+.btn { display:inline-flex; align-items:center; justify-content:center; border-radius:8px; padding:10px 16px; font-size:14px; font-weight:700; border:1px solid transparent; cursor:pointer; transition:all .2s ease; }
+.btn-primary { background: var(--primary); color:#fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-secondary { background: var(--teal); color: var(--charcoal); }
+.btn-secondary:hover { filter: brightness(0.9); }
+.btn-ghost { background: transparent; color: var(--charcoal); border:1px solid var(--border); }
+.btn-ghost:hover { background: rgba(25,25,25,0.04); }
+.btn:disabled { opacity:.6; cursor:not-allowed; }
+.spinner { width:16px; height:16px; border-radius:50%; border:2px solid #fff; border-top-color: transparent; animation: spin .8s linear infinite; margin-right:8px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.card { border:1px solid var(--border); background:#fff; border-radius: var(--radius); box-shadow: var(--shadow); padding:16px; }
+.form-group { display:block; }
+.label { display:block; margin-bottom:6px; font-size:14px; color:#334155; font-weight:600; }
+.input { width:100%; border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:#0f172a; background:#fff; }
+.input:focus { outline:2px solid var(--primary); }
+
+.loader { display:flex; align-items:center; justify-content:center; gap:8px; padding:20px; color:#475569; }
+
+/* Typography */
+.title-xl { font-size: 32px; font-weight: 800; letter-spacing: -0.01em; color: var(--text); }
+.title-lg { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: var(--text); }
+.title-sm { font-size: 14px; font-weight: 700; color: var(--charcoal-light); }
+.text-muted { color: var(--muted); }
+
+/* Layout utilities */
+.row { display:flex; align-items:center; gap:12px; }
+.row-between { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.stack { display:flex; flex-direction:column; gap:24px; }
+.stack-sm { display:flex; flex-direction:column; gap:12px; }
+.actions { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
+.grid-3 { display:grid; gap:24px; grid-template-columns: 1fr; }
+@media (min-width:640px) { .grid-3 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width:1024px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+.empty-state { border:1px solid var(--border); background:#f8fafc; border-radius:12px; padding:24px; text-align:center; }
+.error-state { border:1px solid rgba(220,38,38,.3); background: rgba(220,38,38,.1); color: var(--error); border-radius:12px; padding:12px; }
+
+/* Typography */
+.title-xl { font-size:32px; font-weight:800; letter-spacing:-0.01em; margin:0; }
+.title-lg { font-size:20px; font-weight:800; margin:0; }
+.text-muted { color: var(--muted); }
+
+/* Grids */
+.grid { display:grid; }
+.gap-16 { gap:16px; }
+.gap-24 { gap:24px; }
+.grid-3 { grid-template-columns: 1fr; }
+@media (min-width:640px) { .grid-3 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width:1024px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+.grid-2 { grid-template-columns: 1fr; }
+@media (min-width: 640px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+
+/* Media helpers */
+img { max-width: 100%; height: auto; }
+@media (max-width: 640px) {
+  .header-inner { flex-wrap: wrap; gap: 12px; }
+}
+
+.hero { text-align:center; padding:48px 0 24px; }
+.hero-actions { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:center; margin-top:16px; }
+.attribution { margin-top:8px; font-size:12px; color:#64748b; }

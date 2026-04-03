@@ -1,0 +1,301 @@
+/* ----- Base Footer ----- */
+.footer {
+  background-color: var(--charcoal);
+  color: #fff;
+  width: 100%;
+}
+
+/* ----- Newsletter Section ----- */
+.newsletterSection {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  margin-bottom: 4rem;
+}
+
+.newsletterTitle {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.newsletterForm {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.emailInput {
+  flex: 1;
+  max-width: 400px;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.subscribeButton {
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, #FF2069 0%, #e01e5a 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.subscribeButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.partners {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+.partners img {
+  height: 40px;
+  width: auto;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.partners img:hover {
+  opacity: 1;
+}
+
+.hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+/* ----- Footer Content ----- */
+.footerContent {
+  padding: 4rem 0;
+}
+
+.footerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.footerColumn {
+  min-width: 250px;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.footerColumn:first-child {
+  flex: 2;
+  max-width: 50%;
+}
+
+.footerColumn:not(:first-child) {
+  flex: 1;
+}
+
+/* ----- Logo Section ----- */
+.logoSection {
+  margin-bottom: 2rem;
+}
+
+.footerLogo {
+  width: 160px;
+  margin-bottom: 1.5rem;
+}
+
+.description {
+  color: #ccc;
+  line-height: 1.6;
+}
+
+.description p {
+  margin-bottom: 1rem;
+}
+
+/* ----- Column Title ----- */
+.columnTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+/* ----- Footer Links ----- */
+.footerLinks {
+  list-style: none;
+  padding: 0;
+}
+
+.footerLinks li {
+  margin-bottom: 1rem;
+}
+
+.footerLinks a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footerLinks a:hover {
+  color: var(--pink);
+}
+
+/* ----- Download Buttons ----- */
+.downloadButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.downloadButton {
+  height: 40px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.downloadButton:hover {
+  transform: translateY(-2px);
+}
+
+/* ----- Social Icons ----- */
+.bottomFooter {
+  padding: 2rem 0;
+}
+
+.socialContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.socialIcons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.socialIcon {
+  color: #fff;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.socialIcon:hover {
+  color: var(--pink);
+}
+
+/* ----- Legal Text ----- */
+.legalText {
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+.legalText a {
+  color: var(--pink);
+  text-decoration: none;
+}
+
+.legalText a:hover {
+  text-decoration: underline;
+}
+
+/* ----- Certification Badges ----- */
+.certifications {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.certLink {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.certLink:hover {
+  transform: translateY(-2px);
+}
+
+.certBadge {
+  height: 50px;
+  width: auto;
+}
+
+/* ----- Responsive Design ----- */
+@media (max-width: 768px) {
+  .newsletterForm {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .emailInput,
+  .subscribeButton {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .partners {
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+
+  .partners img {
+    width: 110px;
+    height: 35px;
+  }
+
+  .footerLogo {
+    width: 140px;
+  }
+
+  .columnTitle {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .footerLinks a {
+    font-size: 1rem;
+  }
+
+  .downloadButtons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footerColumn:first-child {
+    max-width: 100%;
+  }
+
+  .certifications {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .certBadge {
+    height: 40px;
+  }
+}
