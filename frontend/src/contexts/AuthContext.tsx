@@ -13,7 +13,8 @@ type AuthContextValue = {
   user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  signup: (name: string, email: string, password: string) => Promise<{ message: string; otp?: string; email: string } | void>;
+  verifySignup: (email: string, otp: string) => Promise<void>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => void;
 };
@@ -71,7 +72,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
       
-      const data = await authService.signup(name, email, password);
+      return await authService.signup(name, email, password);
+    },
+    async verifySignup(email: string, otp: string) {
+      if (devMockAuth) {
+        return;
+      }
+      const data = await authService.verifySignup(email, otp);
       const t = data.token;
       if (t) {
         storage.set(STORAGE_KEYS.token, t);

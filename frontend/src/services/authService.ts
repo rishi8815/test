@@ -18,8 +18,13 @@ export const authService = {
     return res.data?.data;
   },
 
-  async signup(name: string, email: string, password: string): Promise<AuthResponse> {
+  async signup(name: string, email: string, password: string): Promise<{ message: string; otp?: string; email: string }> {
     const res = await api.post('/auth/signup', { name, email, password });
+    return res.data;
+  },
+
+  async verifySignup(email: string, otp: string): Promise<AuthResponse> {
+    const res = await api.post('/auth/verify-signup', { email, otp });
     return res.data?.data;
   },
 

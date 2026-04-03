@@ -40,6 +40,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    signupOTP: String,
+    signupOTPExpire: Date,
+    resetPasswordOTP: String,
+    resetPasswordOTPExpire: Date,
   },
   {
     timestamps: true,
@@ -47,29 +55,55 @@ const userSchema = new mongoose.Schema(
 );
 
 // Encrypt password using bcrypt
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function () {
   if (!this.isModified('password')) {
-    return next();
+    return;
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  // next() is optional with async/await in mongoose 5+, but good to be explicit or just rely on promise
 });
 
 // Generate Reseller ID if role is reseller
-userSchema.pre('save', function (next) {
+userSchema.pre('save', function () {
   if (this.role === 'reseller' && !this.resellerId) {
-    // Generate a short unique ID (e.g., 8 chars) or use UUID. 
-    // For affiliate links, shorter is often nicer, but UUID is collision-safe.
-    // Let's use a part of UUID or a random string to keep it URL friendly.
-    this.resellerId = uuidv4().split('-')[0]; // Simple 8-char hex
+    this.resellerId = uuidv4().split('-')[0];
   }
-  // next(); // Don't call next() here if not needed for sync middleware or just use return
 });
 
 // Match user entered password to hashed password in database
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate and hash signup OTP
+userSchema.methods.getSignupOTP = function () {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  this.signupOTP = require('crypto')
+    .createHash('sha256')
+    .update(otp)
+    .digest('hex');
+
+  this.signupOTPExpire = Date.now() + 10 * 60 * 1000;
+
+  return otp;
+};
+
+// Generate and hash password OTP
+userSchema.methods.getResetPasswordOTP = function () {
+  // Generate a 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // Hash OTP and set to resetPasswordOTP field
+  this.resetPasswordOTP = require('crypto')
+    .createHash('sha256')
+    .update(otp)
+    .digest('hex');
+
+  // Set expire (e.g., 10 minutes)
+  this.resetPasswordOTPExpire = Date.now() + 10 * 60 * 1000;
+
+  return otp;
 };
 
 module.exports = mongoose.model('User', userSchema);

@@ -61,7 +61,7 @@ const requestPayout = async (req, res) => {
     destination,
   });
   
-  res.status(201).json(payout);
+  res.status(201).json({ data: payout });
 };
 
 // @desc    Get Profile
@@ -69,11 +69,12 @@ const requestPayout = async (req, res) => {
 const getProfile = async (req, res) => {
   const user = await User.findById(req.user.id);
   res.json({
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    resellerId: user.resellerId,
-    // Add other profile fields
+    data: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      resellerId: user.resellerId,
+    }
   });
 };
 
@@ -83,17 +84,27 @@ const updateProfile = async (req, res) => {
   const user = await User.findById(req.user.id);
   if (req.body.name) user.name = req.body.name;
   if (req.body.email) user.email = req.body.email;
-  // Don't update resellerId or role here
   
   await user.save();
-  res.json(user);
+  res.json({
+    data: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      resellerId: user.resellerId,
+    }
+  });
 };
 
 // @desc    Get Settings
 // @route   GET /reseller/settings
 const getSettings = async (req, res) => {
-  // Mock settings for now
-  res.json({ notifications: true, payoutMethod: 'beam_wallet' });
+  res.json({
+    data: {
+      notifications: true,
+      payoutMethod: 'beam_wallet'
+    }
+  });
 };
 
 module.exports = {

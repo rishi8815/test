@@ -33,7 +33,14 @@ export default function Login() {
       {error && <ErrorState message={error} />}
       <form onSubmit={onSubmit} className="stack" style={{ marginTop: 16 }}>
         <Input label="Email or Beam Number" type="text" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <div className="stack">
+          <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <div style={{ textAlign: 'right', marginTop: -12 }}>
+            <Link to="/forgot-password" style={{ fontSize: 12, color: 'var(--pink)', textDecoration: 'none' }}>
+              Forgot password?
+            </Link>
+          </div>
+        </div>
         <Button type="submit" loading={loading} style={{ width: '100%' }}>Login</Button>
       </form>
       <p className="text-muted" style={{ marginTop: 16, fontSize: 14 }}>Don't have an account? <Link to="/signup" className="nav-link" style={{ color: 'var(--pink)' }}>Sign up</Link></p>

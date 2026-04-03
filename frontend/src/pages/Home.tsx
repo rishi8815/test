@@ -28,7 +28,7 @@ export default function Home() {
         </div>
         <div className="card">
           <div className="title-lg">Professional UI</div>
-          <p className="text-muted" style={{ marginTop: 8, fontSize: 14 }}>Fast, responsive, and modern design aligned with Beam branding and Nunito typography.</p>
+          <p className="text-muted" style={{ marginTop: 8, fontSize: 14 }}>Experience a seamless and intuitive interface designed to empower your affiliate journey with real-time insights and professional tools.</p>
         </div>
       </div>
     </div>

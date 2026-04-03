@@ -25,7 +25,6 @@ export default function Navbar() {
             <NavLink to="/reports" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Reports</NavLink>
             <NavLink to="/payouts" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Payouts</NavLink>
             <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Profile</NavLink>
-            <NavLink to="/customer/products/1" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Customer</NavLink>
           </nav>
           <button className="mobile-nav-toggle" aria-label="Toggle navigation" onClick={toggleMobile}>
             <span></span>
@@ -54,7 +53,6 @@ export default function Navbar() {
           <Link to="/reports" onClick={closeMobile}>Reports</Link>
           <Link to="/payouts" onClick={closeMobile}>Payouts</Link>
           <Link to="/profile" onClick={closeMobile}>Profile</Link>
-          <Link to="/customer/products/1" onClick={closeMobile}>Customer</Link>
         </div>
       </header>
     </>

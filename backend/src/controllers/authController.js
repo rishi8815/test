@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
   }
 
   // Create user
-  const user = await User.create({
+  const user = new User({
     name,
     email,
     password,
@@ -29,22 +29,61 @@ const registerUser = async (req, res) => {
     registrationIp: req.ip
   });
 
-  if (user) {
-    res.status(201).json({
-      data: {
-        token: generateToken(user._id),
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          resellerId: user.resellerId,
-        }
-      }
-    });
-  } else {
-    res.status(400).json({ message: 'Invalid user data' });
+  // Generate Signup OTP
+  const otp = user.getSignupOTP();
+  await user.save();
+
+  // In production, send this OTP via email
+  res.status(201).json({
+    message: 'User registered. Please verify your email with the OTP sent.',
+    otp: otp, // DEV ONLY
+    email: user.email
+  });
+};
+
+// @desc    Verify signup OTP
+// @route   POST /auth/verify-signup
+// @access  Public
+const verifySignupOTP = async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ message: 'Please provide email and OTP' });
   }
+
+  const hashedOTP = require('crypto')
+    .createHash('sha256')
+    .update(otp)
+    .digest('hex');
+
+  const user = await User.findOne({
+    email,
+    signupOTP: hashedOTP,
+    signupOTPExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: 'Invalid or expired OTP' });
+  }
+
+  user.isVerified = true;
+  user.signupOTP = undefined;
+  user.signupOTPExpire = undefined;
+  await user.save();
+
+  res.status(200).json({
+    message: 'Email verified successfully',
+    data: {
+      token: generateToken(user._id),
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        resellerId: user.resellerId,
+      }
+    }
+  });
 };
 
 // @desc    Authenticate a user
@@ -57,6 +96,10 @@ const loginUser = async (req, res) => {
   const user = await User.findOne({ email }).select('+password');
 
   if (user && (await user.matchPassword(password))) {
+    if (!user.isVerified) {
+      return res.status(401).json({ message: 'Please verify your email before logging in' });
+    }
+
     // Update last login IP
     user.lastLoginIp = req.ip;
     await user.save({ validateBeforeSave: false });
@@ -95,8 +138,107 @@ const getMe = async (req, res) => {
   });
 };
 
+// @desc    Forgot password
+// @route   POST /auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return res.status(404).json({ message: 'There is no user with that email' });
+  }
+
+  // Get reset OTP
+  const otp = user.getResetPasswordOTP();
+
+  await user.save({ validateBeforeSave: false });
+
+  // In a real app, you would send an email here. 
+  // For now, we'll just return the OTP in the response for testing/dev.
+  res.status(200).json({
+    message: 'OTP generated (In production this would be sent via email)',
+    otp: otp
+  });
+};
+
+// @desc    Verify OTP
+// @route   POST /auth/verify-otp
+// @access  Public
+const verifyOTP = async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ message: 'Please provide email and OTP' });
+  }
+
+  // Get hashed OTP
+  const hashedOTP = require('crypto')
+    .createHash('sha256')
+    .update(otp)
+    .digest('hex');
+
+  const user = await User.findOne({
+    email,
+    resetPasswordOTP: hashedOTP,
+    resetPasswordOTPExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: 'Invalid or expired OTP' });
+  }
+
+  res.status(200).json({
+    message: 'OTP verified successfully',
+    success: true
+  });
+};
+
+// @desc    Reset password
+// @route   PUT /auth/reset-password
+// @access  Public
+const resetPassword = async (req, res) => {
+  const { email, otp, password } = req.body;
+
+  if (!email || !otp || !password) {
+    return res.status(400).json({ message: 'Please provide email, OTP and new password' });
+  }
+
+  // Get hashed OTP
+  const hashedOTP = require('crypto')
+    .createHash('sha256')
+    .update(otp)
+    .digest('hex');
+
+  const user = await User.findOne({
+    email,
+    resetPasswordOTP: hashedOTP,
+    resetPasswordOTPExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: 'Invalid or expired OTP' });
+  }
+
+  // Set new password
+  user.password = password;
+  user.resetPasswordOTP = undefined;
+  user.resetPasswordOTPExpire = undefined;
+  await user.save();
+
+  res.status(200).json({
+    message: 'Password reset successful',
+    data: {
+      token: generateToken(user._id),
+    }
+  });
+};
+
 module.exports = {
   registerUser,
+  verifySignupOTP,
   loginUser,
   getMe,
+  forgotPassword,
+  verifyOTP,
+  resetPassword,
 };
