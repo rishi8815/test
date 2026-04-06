@@ -1,5 +1,26 @@
 const nodemailer = require('nodemailer');
 
+// Create transporter ONCE and reuse (avoids reconnecting on every email)
+let transporter = null;
+
+const getTransporter = () => {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      pool: true,           // Use pooled connections
+      maxConnections: 3,
+      maxMessages: 100,
+      connectionTimeout: 10000,  // 10s connection timeout
+      socketTimeout: 10000,      // 10s socket timeout
+    });
+  }
+  return transporter;
+};
+
 /**
  * Send an email using Nodemailer
  * @param {Object} options
@@ -8,14 +29,6 @@ const nodemailer = require('nodemailer');
  * @param {string} options.html - Email body (HTML)
  */
 const sendEmail = async ({ to, subject, html }) => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS, // Gmail App Password (NOT your regular password)
-    },
-  });
-
   const mailOptions = {
     from: `"Beam Affiliate" <${process.env.EMAIL_USER}>`,
     to,
@@ -23,7 +36,7 @@ const sendEmail = async ({ to, subject, html }) => {
     html,
   };
 
-  await transporter.sendMail(mailOptions);
+  await getTransporter().sendMail(mailOptions);
 };
 
 /**

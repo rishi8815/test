@@ -34,17 +34,12 @@ const registerUser = async (req, res) => {
   const otp = user.getSignupOTP();
   await user.save();
 
-  // Send OTP via email
-  try {
-    await sendEmail({
-      to: user.email,
-      subject: 'Verify Your Beam Affiliate Account',
-      html: buildOTPEmail(otp, 'verify your account'),
-    });
-  } catch (emailErr) {
-    console.error('Failed to send signup OTP email:', emailErr.message);
-    // Don't block registration, but log the error
-  }
+  // Send OTP via email (fire-and-forget — don't block the response)
+  sendEmail({
+    to: user.email,
+    subject: 'Verify Your Beam Affiliate Account',
+    html: buildOTPEmail(otp, 'verify your account'),
+  }).catch(err => console.error('Failed to send signup OTP email:', err.message));
 
   res.status(201).json({
     message: 'User registered. Please verify your email with the OTP sent.',
@@ -164,16 +159,13 @@ const forgotPassword = async (req, res) => {
 
   await user.save({ validateBeforeSave: false });
 
-  // Send OTP via email
-  try {
-    await sendEmail({
-      to: user.email,
-      subject: 'Reset Your Beam Affiliate Password',
-      html: buildOTPEmail(otp, 'reset your password'),
-    });
-  } catch (emailErr) {
-    console.error('Failed to send password reset OTP email:', emailErr.message);
-  }
+  // Send OTP via email (fire-and-forget — don't block the response)
+  sendEmail({
+    to: user.email,
+    subject: 'Reset Your Beam Affiliate Password',
+    html: buildOTPEmail(otp, 'reset your password'),
+  }).catch(err => console.error('Failed to send password reset OTP email:', err.message));
+
 
   res.status(200).json({
     message: 'OTP has been sent to your email address',
