@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
+const { sendEmail, buildOTPEmail } = require('../utils/sendEmail');
 
 // @desc    Register new user
 // @route   POST /auth/register
@@ -33,10 +34,20 @@ const registerUser = async (req, res) => {
   const otp = user.getSignupOTP();
   await user.save();
 
-  // In production, send this OTP via email
+  // Send OTP via email
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: 'Verify Your Beam Affiliate Account',
+      html: buildOTPEmail(otp, 'verify your account'),
+    });
+  } catch (emailErr) {
+    console.error('Failed to send signup OTP email:', emailErr.message);
+    // Don't block registration, but log the error
+  }
+
   res.status(201).json({
     message: 'User registered. Please verify your email with the OTP sent.',
-    otp: otp, // DEV ONLY
     email: user.email
   });
 };
@@ -153,11 +164,19 @@ const forgotPassword = async (req, res) => {
 
   await user.save({ validateBeforeSave: false });
 
-  // In a real app, you would send an email here. 
-  // For now, we'll just return the OTP in the response for testing/dev.
+  // Send OTP via email
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: 'Reset Your Beam Affiliate Password',
+      html: buildOTPEmail(otp, 'reset your password'),
+    });
+  } catch (emailErr) {
+    console.error('Failed to send password reset OTP email:', emailErr.message);
+  }
+
   res.status(200).json({
-    message: 'OTP generated (In production this would be sent via email)',
-    otp: otp
+    message: 'OTP has been sent to your email address',
   });
 };
 
